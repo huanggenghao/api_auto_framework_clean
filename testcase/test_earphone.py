@@ -2,112 +2,54 @@
 # -*- coding: utf-8 -*-
 # @Time : 2024/07/31
 # @Author : huanggenghao
-
+"""
+耳机：接口地址 data/earphone/endpoints.yaml，用例列表 data/earphone/cases.yaml。
+每条 case 为单个字典；与 conftest 中 earphone_data 同源。
+"""
 import allure
 
+from common.case_data import build_parametrize_cases
+from common.data_files import EARPHONE_CASES_YAML, EARPHONE_ENDPOINTS_YAML
 from core.assert_util import assert_equal
+from core.expect_util import apply_response_expectations
+
+
+def pytest_generate_tests(metafunc):
+    if "earphone_case" not in metafunc.fixturenames:
+        return
+    cases = build_parametrize_cases(EARPHONE_ENDPOINTS_YAML, EARPHONE_CASES_YAML)
+    metafunc.parametrize("earphone_case", cases, ids=[c["case_no"] for c in cases])
 
 
 @allure.feature("耳机说明书")
-@allure.title("获取h5耳机说明书")
-def test_get_h5_information(earphone_data, earphone_service, log):
-    log.info("--------------start-------------")
-    with allure.step("调用 service：耳机说明书"):
-        r2 = earphone_service.earphone_information_flow(925994607524962304)
-    log.info("登陆手机账号15992213991")
-    log.info("连接h5耳机")
-    log.info("进入更多")
-    log.info("查看h5耳机说明书")
-    with allure.step("assert_util 断言"):
-        assert_equal(r2, "Success！", "测试用例不通过")
-    log.info("--------------end-------------")
+def test_product_manual_parametrized(earphone_case, earphone_data, earphone_service, log):
+    assert_equal(
+        earphone_case["resolved_url"],
+        earphone_data["endpoints"][earphone_case["endpoint_key"]],
+        "resolved_url 与 earphone_data.endpoints 不一致",
+    )
 
+    case_no = earphone_case["case_no"]
+    case_name = earphone_case["case_name"]
+    req = earphone_case["req"]
+    expect = earphone_case["expect"] or {"http_status": 200, "tip": "Success！"}
 
-@allure.feature("耳机说明书")
-@allure.title("获取t3 pro耳机说明书")
-def test_get_t3_pro_information(earphone_data, earphone_service, log):
-    log.info("--------------start-------------")
-    with allure.step("调用 service：耳机说明书"):
-        r2 = earphone_service.earphone_information_flow(927442686274351104)
-    log.info("登陆手机账号15992213991")
-    log.info("连接t3 pro耳机")
-    log.info("进入更多")
-    log.info("查看t3 pro耳机说明书")
-    with allure.step("assert_util 断言"):
-        assert_equal(r2, "Success！", "测试用例不通过")
-    log.info("--------------end-------------")
+    allure.dynamic.title(f"[{case_no}] {case_name}")
+    allure.dynamic.parameter("productId", req.get("productId"))
+    allure.dynamic.parameter("expect", str(expect))
 
+    log.info(
+        "POST product_manual caseNo=%s productId=%s lang=%s url=%s",
+        case_no,
+        req.get("productId"),
+        req.get("lang"),
+        earphone_case["resolved_url"],
+    )
 
-@allure.feature("耳机说明书")
-@allure.title("获取h6 pro耳机说明书")
-def test_get_h6_pro_information(earphone_data, earphone_service, log):
-    log.info("--------------start-------------")
-    with allure.step("调用 service：耳机说明书"):
-        r2 = earphone_service.earphone_information_flow(927443095978160128)
-    log.info("登陆手机账号15992213991")
-    log.info("连接h6 pro耳机")
-    log.info("进入更多")
-    log.info("查看h6 pro耳机说明书")
-    with allure.step("assert_util 断言"):
-        assert_equal(r2, "Success！", "测试用例不通过")
-    log.info("--------------end-------------")
+    with allure.step(f"POST product/manual（caseNo={case_no}）"):
+        response = earphone_service.post_product_manual(req)
 
+    log.info("HTTP status=%s body_len=%s", response.status_code, len(response.text or ""))
 
-@allure.feature("耳机说明书")
-@allure.title("获取p3耳机说明书")
-def test_get_p3_information(earphone_data, earphone_service, log):
-    log.info("--------------start-------------")
-    with allure.step("调用 service：耳机说明书"):
-        r2 = earphone_service.earphone_information_flow(934671368550416384)
-    log.info("登陆手机账号15992213991")
-    log.info("连接p3耳机")
-    log.info("进入更多")
-    log.info("查看p3耳机说明书")
-    with allure.step("assert_util 断言"):
-        assert_equal(r2, "Success！", "测试用例不通过")
-    log.info("--------------end-------------")
-
-
-@allure.feature("耳机说明书")
-@allure.title("获取max 5c耳机说明书")
-def test_get_max5c_information(earphone_data, earphone_service, log):
-    log.info("--------------start-------------")
-    with allure.step("调用 service：耳机说明书"):
-        r2 = earphone_service.earphone_information_flow(925997015143538688)
-    log.info("登陆手机账号15992213991")
-    log.info("连接mac 5c耳机")
-    log.info("进入更多")
-    log.info("查看mac 5c耳机说明书")
-    with allure.step("assert_util 断言"):
-        assert_equal(r2, "Success！", "测试用例不通过")
-    log.info("--------------end-------------")
-
-
-@allure.feature("耳机说明书")
-@allure.title("获取mac5耳机说明书")
-def test_get_mac5_information(earphone_data, earphone_service, log):
-    log.info("--------------start-------------")
-    with allure.step("调用 service：耳机说明书"):
-        r2 = earphone_service.earphone_information_flow(925995115073495040)
-    log.info("登陆手机账号15992213991")
-    log.info("连接mac5耳机")
-    log.info("进入更多")
-    log.info("查看mac5耳机说明书")
-    with allure.step("assert_util 断言"):
-        assert_equal(r2, "Success！", "测试用例不通过")
-    log.info("--------------end-------------")
-
-
-@allure.feature("耳机说明书")
-@allure.title("获取t6耳机说明书")
-def test_get_t6_information(earphone_data, earphone_service, log):
-    log.info("--------------start-------------")
-    with allure.step("调用 service：耳机说明书"):
-        r2 = earphone_service.earphone_information_flow(925994896852246528)
-    log.info("登陆手机账号15992213991")
-    log.info("连接t6耳机")
-    log.info("进入更多")
-    log.info("查看t6耳机说明书")
-    with allure.step("assert_util 断言"):
-        assert_equal(r2, "Success！", "测试用例不通过")
-    log.info("--------------end-------------")
+    with allure.step("按 YAML expect 断言"):
+        apply_response_expectations(response, expect)

@@ -2,97 +2,47 @@
 # -*- coding: utf-8 -*-
 # @Time : 2024/08/1
 # @Author : huanggenghao
-
+"""消息中心：endpoints.yaml + cases.yaml，每条 case 为单字典。"""
 import allure
 
+from common.case_data import build_parametrize_cases
+from common.data_files import MESSAGE_CASES_YAML, MESSAGE_ENDPOINTS_YAML
 from core.assert_util import assert_equal
+from core.expect_util import apply_response_expectations
+
+
+def pytest_generate_tests(metafunc):
+    if "message_case" not in metafunc.fixturenames:
+        return
+    cases = build_parametrize_cases(MESSAGE_ENDPOINTS_YAML, MESSAGE_CASES_YAML)
+    metafunc.parametrize("message_case", cases, ids=[c["case_no"] for c in cases])
 
 
 @allure.feature("消息中心")
-@allure.title("系统通知点击全部已读")
-def test_system_all_read(message_center_data, message_service, log):
-    log.info("--------------start-------------")
-    with allure.step("调用 service：消息中心全部已读"):
-        r2 = message_service.information_center(1, "zh_CN")
-    log.info("登陆手机账号15992213991")
-    log.info("切换到首页")
-    log.info("进入消息中心")
-    log.info("系统通知点击全部已读按钮")
-    with allure.step("assert_util 断言"):
-        assert_equal(r2, "Success！", "测试用例不通过")
-    log.info("--------------end-------------")
+def test_message_all_read_parametrized(
+    message_case, message_center_data, message_service, log
+):
+    assert_equal(
+        message_case["resolved_url"],
+        message_center_data["endpoints"][message_case["endpoint_key"]],
+        "resolved_url 与 message_center_data.endpoints 不一致",
+    )
 
+    allure.dynamic.title(f"[{message_case['case_no']}] {message_case['case_name']}")
+    allure.dynamic.parameter("type", message_case["req"].get("type"))
+    allure.dynamic.parameter("lang", message_case["req"].get("lang"))
 
-@allure.feature("消息中心")
-@allure.title("设备推送点击全部已读")
-def test_device(message_center_data, message_service, log):
-    log.info("--------------start-------------")
-    with allure.step("调用 service：消息中心全部已读"):
-        r2 = message_service.information_center(3, "zh_CN")
-    log.info("登陆手机账号15992213991")
-    log.info("切换到首页")
-    log.info("进入消息中心")
-    log.info("设备推送点击全部已读")
-    with allure.step("assert_util 断言"):
-        assert_equal(r2, "Success！", "测试用例不通过")
-    log.info("--------------end-------------")
+    log.info(
+        "POST message/all/read caseNo=%s type=%s lang=%s",
+        message_case["case_no"],
+        message_case["req"].get("type"),
+        message_case["req"].get("lang"),
+    )
 
+    with allure.step(f"POST（caseNo={message_case['case_no']}）"):
+        response = message_service.post_message_all_read(message_case["req"])
 
-@allure.feature("消息中心")
-@allure.title("设备分享点击全部已读")
-def test_device_sharing(message_center_data, message_service, log):
-    log.info("--------------start-------------")
-    with allure.step("调用 service：消息中心全部已读"):
-        r2 = message_service.information_center(4, "zh_CN")
-    log.info("登陆手机账号15992213991")
-    log.info("切换到首页")
-    log.info("进入消息中心")
-    log.info("设备分享点击全部已读")
-    with allure.step("assert_util 断言"):
-        assert_equal(r2, "Success！", "测试用例不通过")
-    log.info("--------------end-------------")
+    log.info("HTTP status=%s", response.status_code)
 
-
-@allure.feature("消息中心")
-@allure.title("系统通知点击全部已读(英文)")
-def test_system_all_read_english(message_center_data, message_service, log):
-    log.info("--------------start-------------")
-    with allure.step("调用 service：消息中心全部已读"):
-        r2 = message_service.information_center(1, "en_US")
-    log.info("登陆手机账号15992213991")
-    log.info("切换到首页")
-    log.info("进入消息中心")
-    log.info("系统通知点击全部已读按钮")
-    with allure.step("assert_util 断言"):
-        assert_equal(r2, "Success！", "测试用例不通过")
-    log.info("--------------end-------------")
-
-
-@allure.feature("消息中心")
-@allure.title("设备推送点击全部已读(英文)")
-def test_device_english(message_center_data, message_service, log):
-    log.info("--------------start-------------")
-    with allure.step("调用 service：消息中心全部已读"):
-        r2 = message_service.information_center(3, "en_US")
-    log.info("登陆手机账号15992213991")
-    log.info("切换到首页")
-    log.info("进入消息中心")
-    log.info("设备推送点击全部已读")
-    with allure.step("assert_util 断言"):
-        assert_equal(r2, "Success！", "测试用例不通过")
-    log.info("--------------end-------------")
-
-
-@allure.feature("消息中心")
-@allure.title("设备分享点击全部已读(英文)")
-def test_device_sharing_english(message_center_data, message_service, log):
-    log.info("--------------start-------------")
-    with allure.step("调用 service：消息中心全部已读"):
-        r2 = message_service.information_center(4, "en_US")
-    log.info("登陆手机账号15992213991")
-    log.info("切换到首页")
-    log.info("进入消息中心")
-    log.info("设备分享点击全部已读")
-    with allure.step("assert_util 断言"):
-        assert_equal(r2, "Success！", "测试用例不通过")
-    log.info("--------------end-------------")
+    with allure.step("按 YAML expect 断言"):
+        apply_response_expectations(response, message_case["expect"])

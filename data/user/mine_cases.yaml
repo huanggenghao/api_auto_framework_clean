@@ -1,0 +1,235 @@
+cases:
+  - caseNo: "01"
+    caseName: 更新用户昵称
+    endpoint: user_update_url
+    repeat_count: 1
+    request:
+      name: "13570368266"
+    expect:
+      http_status: 200
+      tip: Success
+  - caseNo: "02"
+    caseName: 更新用户昵称为空
+    endpoint: user_update_url
+    repeat_count: 1
+    request:
+      name: ""
+    expect:
+      http_status: 200
+      tip: Success
+  - caseNo: "03"
+    caseName: 更新用户昵称为1
+    endpoint: user_update_url
+    repeat_count: 1
+    request:
+      name: "1"
+    expect:
+      http_status: 200
+      tip: Success
+  - caseNo: "04"
+    caseName: 更新用户昵称超过30个字符
+    endpoint: user_update_url
+    repeat_count: 1
+    request:
+      name: "11111111111111111111111111111111111"
+    expect:
+      http_status: 200
+      tip: Success
+  - caseNo: "05"
+    caseName: 更新用户头像
+    endpoint: user_update_url
+    repeat_count: 1
+    request:
+      avatar: https://dpttest.ugreeniot.com/image/976726678281510912_avatar.png
+    expect:
+      http_status: 200
+      tip: Success
+  - caseNo: "06"
+    caseName: 更新用户头像为空
+    endpoint: user_update_url
+    repeat_count: 1
+    request:
+      avatar: ""
+    expect:
+      http_status: 200
+      tip: Success
+  - caseNo: "07"
+    caseName: 更新用户昵称等于30个字符
+    endpoint: user_update_url
+    repeat_count: 1
+    request:
+      name: 我生死狙击1111111&^%$#@!*()*^%%$#@g
+    expect:
+      http_status: 200
+      tip: Success
+  - caseNo: "08"
+    caseName: 检查消息设置默认值
+    endpoint: push_switch_list
+    repeat_count: 1
+    request: {}
+    expect:
+      http_status: 200
+      tip: "Success！"
+      list_switch_status: [true, false, false]
+  - caseNo: "09"
+    caseName: 消息设置界面设置设备推送为开
+    endpoint: push_switch_update
+    repeat_count: 1
+    request:
+      switchId: "978451238196674560"
+      switchStatus: "1"
+    expect:
+      http_status: 200
+      tip: "Success！"
+  - caseNo: "10"
+    caseName: 消息设置界面设置设备推送为关
+    endpoint: push_switch_update
+    repeat_count: 1
+    request:
+      switchId: "978451238205063168"
+      switchStatus: "0"
+    expect:
+      http_status: 200
+      tip: "Success！"
+  - caseNo: "11"
+    caseName: 消息设置界面设置设备推送为关
+    endpoint: push_switch_update
+    repeat_count: 1
+    request:
+      switchId: "978451238209257472"
+      switchStatus: "0"
+    expect:
+      http_status: 200
+      tip: "Success！"
+  - caseNo: "12"
+    caseName: 检验app中文下检测安卓app升级
+    endpoint: check_version_update
+    repeat_count: 1
+    request:
+      versionNum: 7
+      languageCode: zh_CN
+      platform: 1
+    expect:
+      http_status: 200
+      tip: "Success！"
+  - caseNo: "13"
+    caseName: 检验app中文下相同versioncode检测安卓app升级
+    endpoint: check_version_update
+    repeat_count: 1
+    request:
+      versionNum: 17
+      languageCode: zh_CN
+      platform: 1
+    expect:
+      http_status: 200
+      tip: "当前版本已经是最新！"
+  - caseNo: "14"
+    caseName: 检验app中文下检测安卓app版本异常
+    endpoint: check_version_update
+    repeat_count: 1
+    request:
+      versionNum: a
+      languageCodo: zh_CN
+      platform: 1
+    expect:
+      http_status: 200
+      tip: "应用版本比较异常！"
+  - caseNo: "15"
+    caseName: 检验app英语下下检测安卓app升级
+    endpoint: check_version_update
+    repeat_count: 1
+    request:
+      versionNum: 7
+      languageCodo: en_US
+      platform: 1
+    expect:
+      http_status: 200
+      tip: "Success！"
+  - caseNo: "16"
+    caseName: 检验app中文下相同versioncode检测安卓app升级
+    endpoint: check_version_update
+    repeat_count: 1
+    request:
+      versionNum: 17
+      languageCode: en_US
+      platform: 1
+    expect:
+      http_status: 200
+      tip: "当前版本已经是最新！"
+  - caseNo: "17"
+    caseName: 检验app中文下检测安卓app版本异常
+    endpoint: check_version_update
+    repeat_count: 1
+    request:
+      versionNum: a
+      languageCodo: en_US
+      platform: 1
+    expect:
+      http_status: 200
+      tip: "应用版本比较异常！"
+  - caseNo: "18"
+    caseName: 检验app中文下检测ios app升级
+    endpoint: check_version_update
+    repeat_count: 1
+    request:
+      versionNum: 7
+      languageCode: zh_CN
+      platform: 2
+    expect:
+      http_status: 200
+      tip: "Success！"
+  - caseNo: "19"
+    caseName: 检验app中文下相同versioncode检测苹果app升级
+    endpoint: check_version_update
+    repeat_count: 1
+    request:
+      versionNum: 17
+      languageCode: zh_CN
+      platform: 2
+    expect:
+      http_status: 200
+      tip: "当前版本已经是最新！"
+  - caseNo: "20"
+    caseName: 检验app中文下检测苹果app版本异常
+    endpoint: check_version_update
+    repeat_count: 1
+    request:
+      versionNum: a
+      languageCodo: zh_CN
+      platform: 2
+    expect:
+      http_status: 200
+      tip: "应用版本比较异常！"
+  - caseNo: "21"
+    caseName: 检验app英语下下检测苹果app升级
+    endpoint: check_version_update
+    repeat_count: 1
+    request:
+      versionNum: 7
+      languageCodo: en_US
+      platform: 2
+    expect:
+      http_status: 200
+      tip: "Success！"
+  - caseNo: "22"
+    caseName: 检验app英文下相同versioncode检测苹果app升级
+    endpoint: check_version_update
+    repeat_count: 1
+    request:
+      versionNum: 17
+      languageCode: en_US
+      platform: 2
+    expect:
+      http_status: 200
+      tip: "当前版本已经是最新！"
+  - caseNo: "23"
+    caseName: 检验app英文下检测苹果app版本异常
+    endpoint: check_version_update
+    repeat_count: 1
+    request:
+      versionNum: a
+      languageCodo: en_US
+      platform: 2
+    expect:
+      http_status: 200
+      tip: "应用版本比较异常！"

@@ -1,4 +1,6 @@
 # -*- coding: utf-8 -*-
+import requests
+
 from api.login_api import LoginApi
 from core.request_util import HttpClient
 
@@ -7,5 +9,5 @@ class LoginService:
     def __init__(self, http: HttpClient):
         self._api = LoginApi(http)
 
-    def __getattr__(self, name):
-        return getattr(self._api, name)
+    def post(self, endpoint_key: str, body: dict) -> requests.Response:
+        return self._api.post(endpoint_key, body)

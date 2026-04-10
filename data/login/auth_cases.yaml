@@ -1,0 +1,252 @@
+cases:
+  - caseNo: "01"
+    caseName: 正确手机号码和错误密码登陆
+    endpoint: login_url
+    repeat_count: 1
+    request:
+      account: "13570368266"
+      password: abcd12345
+      merchantId: "100000000000000000"
+      phoneCode: "86"
+    expect:
+      http_status: 200
+      code: 20006
+  - caseNo: "02"
+    caseName: 正确手机号码和空密码登陆
+    endpoint: login_url
+    repeat_count: 1
+    request:
+      account: "13570368266"
+      password: ""
+      merchantId: "100000000000000000"
+      phoneCode: "86"
+    expect:
+      http_status: 200
+      code: 10010
+  - caseNo: "03"
+    caseName: 未注册手机号码和密码登陆
+    endpoint: login_url
+    repeat_count: 1
+    request:
+      account: "13417156637"
+      password: abcd12345
+      merchantId: "100000000000000000"
+      phoneCode: "86"
+    expect:
+      http_status: 200
+      code: 40008
+  - caseNo: "04"
+    caseName: 错误验证码注册
+    endpoint: register_url
+    repeat_count: 1
+    request:
+      account: "13417156637"
+      password: abcd12345
+      merchantId: "100000000000000000"
+      phoneCode: "86"
+      code: "123456"
+    expect:
+      http_status: 200
+      code: 40024
+  - caseNo: "05"
+    caseName: 空验证码注册
+    endpoint: register_url
+    repeat_count: 1
+    request:
+      account: "13417156637"
+      password: abcd12345
+      merchantId: "100000000000000000"
+      phoneCode: "86"
+      code: ""
+    expect:
+      http_status: 200
+      code: 10010
+  - caseNo: "06"
+    caseName: 已注册的手机号码重新注册
+    endpoint: code_url
+    repeat_count: 1
+    request:
+      type: REGISTER
+      account: "13570368266"
+      lang: zh_CN
+      merchantId: "100000000000000000"
+    expect:
+      http_status: 200
+      code: 40030
+  - caseNo: "07"
+    caseName: 手机号码格式校验获取验证码
+    endpoint: code_url
+    repeat_count: 1
+    request:
+      type: REGISTER
+      account: "11111111111"
+      lang: zh_CN
+      merchantId: "100000000000000000"
+    expect:
+      http_status: 200
+      code: 40030
+  - caseNo: "08"
+    caseName: 手机重复获取验证码
+    endpoint: code_url
+    repeat_count: 2
+    request:
+      type: REGISTER
+      account: "13417156637"
+      lang: zh_CN
+      merchantId: "100000000000000000"
+    expect:
+      http_status: 200
+      code: 40032
+  - caseNo: "09"
+    caseName: 正常的邮箱密码登陆
+    endpoint: jp_login
+    repeat_count: 1
+    request:
+      account: 2293557380@qq.com
+      password: abcd1234
+      merchantId: "100000000000000000"
+    expect:
+      http_status: 200
+      code: 0
+  - caseNo: "10"
+    caseName: 切换国家列表
+    endpoint: exchange_country_list
+    repeat_count: 1
+    request:
+      blurry: 日本
+    expect:
+      http_status: 200
+      json_equals:
+        "list.0.country": "日本"
+  - caseNo: "11"
+    caseName: 验证错误验证码注册邮箱
+    endpoint: jp_register
+    repeat_count: 1
+    request:
+      account: 1208315069@qq.com
+      password: abcd1234
+      merchantId: "100000000000000000"
+      code: "123456"
+    expect:
+      http_status: 200
+      code: 40024
+  - caseNo: "12"
+    caseName: 验证正常获取邮箱验证码
+    endpoint: Jp_code_get
+    repeat_count: 1
+    request:
+      account: 864069148@qq.com
+      lang: zh_CN
+      merchantId: "100000000000000000"
+      type: REGISTER
+    expect:
+      http_status: 200
+      tip: "Success！"
+  - caseNo: "13"
+    caseName: 验证已注册邮箱重新注册
+    endpoint: Jp_code_get
+    repeat_count: 1
+    request:
+      account: 2293557380@qq.com
+      lang: zh_CN
+      merchantId: "100000000000000000"
+      type: REGISTER
+    expect:
+      http_status: 200
+      code: 40030
+  - caseNo: "14"
+    caseName: 验证获取验证码已达上线
+    endpoint: Jp_code_get
+    repeat_count: 1
+    request:
+      account: 1208315069@qq.com
+      lang: zh_CN
+      merchantId: "100000000000000000"
+      type: REGISTER
+    expect:
+      http_status: 200
+      code: 40045
+  - caseNo: "15"
+    caseName: 邮箱重复获取验证码
+    endpoint: Jp_code_get
+    repeat_count: 2
+    request:
+      type: REGISTER
+      account: 864069148@qq.com
+      lang: zh_CN
+      merchantId: "100000000000000000"
+    expect:
+      http_status: 200
+      code: 40032
+  - caseNo: "16"
+    caseName: 重置密码界面确认邮箱是否已注册
+    endpoint: Jp_code_get
+    repeat_count: 1
+    request:
+      type: PWD_RESET
+      account: 864069148@qq.com
+      lang: zh_CN
+      merchantId: "100000000000000000"
+    expect:
+      http_status: 200
+      code: 40008
+  - caseNo: "17"
+    caseName: 重置密码界面正常获取验证码
+    endpoint: Jp_code_get
+    repeat_count: 1
+    request:
+      type: PWD_RESET
+      account: 877649270@qq.com
+      lang: zh_CN
+      merchantId: "100000000000000000"
+    expect:
+      http_status: 200
+      tip: "Success！"
+  - caseNo: "18"
+    caseName: 重置密码界面邮箱重复获取验证码
+    endpoint: Jp_code_get
+    repeat_count: 2
+    request:
+      type: PWD_RESET
+      account: 877649270@qq.com
+      lang: zh_CN
+      merchantId: "100000000000000000"
+    expect:
+      http_status: 200
+      code: 40032
+  - caseNo: "19"
+    caseName: 验证未注册手机号码重置密码
+    endpoint: code_url
+    repeat_count: 1
+    request:
+      type: PWD_RESET
+      account: "13417156637"
+      lang: zh_CN
+      merchantId: "100000000000000000"
+    expect:
+      http_status: 200
+      code: 40008
+  - caseNo: "20"
+    caseName: 重置密码界面正常获取手机验证码
+    endpoint: code_url
+    repeat_count: 1
+    request:
+      type: PWD_RESET
+      account: "15992213991"
+      lang: zh_CN
+      merchantId: "100000000000000000"
+    expect:
+      http_status: 200
+      tip: "Success！"
+  - caseNo: "21"
+    caseName: 重置密码界面手机重复获取验证码
+    endpoint: code_url
+    repeat_count: 2
+    request:
+      type: PWD_RESET
+      account: "15992213991"
+      lang: zh_CN
+      merchantId: "100000000000000000"
+    expect:
+      http_status: 200
+      code: 40032

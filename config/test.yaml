@@ -1,6 +1,13 @@
 http:
   timeout: 30
   verify_ssl: false
+  # 相对路径请求会与 base_url 拼接；留空则仅用 YAML 中的绝对 URL
+  base_url: ""
+  default_headers: {}
+  retry:
+    total: 3
+    backoff_seconds: 0.5
+    retry_status_codes: [502, 503, 504]
 
 auth:
   login_url: "https://dpt-cn-dev.ugreeniot.com/app/user/login"

@@ -30,11 +30,11 @@ api_auto_framework/
 | 目录 / 文件 | 职责简述 |
 |---------------|----------|
 | `testcase/` | 只写场景与断言，依赖 conftest 注入的 service、数据 fixture |
-| `service/` | `LoginService`、`UserService`、`EarphoneService`、`MessageService`；注册相关函数在 `register_service.py` |
+| `service/` | `LoginService`、`UserService`、`EarphoneService`、`MessageService`（薄封装 api） |
 | `api/` | 与各后端接口一一对应的调用与结果提取逻辑 |
 | `core/` | `request_util.HttpClient`、`assert_util`、`cache_util`（如登录拿 Token）等 |
-| `common/` | `yaml_util`、`data_files`（集中声明 YAML 路径）、`logger`、`allure_util` |
-| `data/` | 业务 YAML：`register_login`、`mine`、`earphone`、`information_center` 等 |
+| `common/` | `yaml_util`、`data_files`、`case_data`（加载 endpoints/cases）、`logger`、`allure_util` |
+| `data/` | 按业务分子目录；**每个业务两套文件**：`endpoints.yaml`（仅接口地址）、`cases.yaml`（仅 `cases:` 列表，一条用例一个字典） |
 | `config/` | `config.yaml` 指定当前环境，再加载 `test.yaml` / `dev.yaml` / `prod.yaml` |
 
 ---
@@ -72,8 +72,8 @@ api_auto_framework/
 ### 分层与职责
 
 - **testcase**：描述「测什么」；通过 fixture 拿到 YAML 数据（带 Allure 步骤）与 `*_service`；使用 `allure.feature` / `title` / `step` 与 `assert_util` 断言。  
-- **service**：描述「业务上怎么调」；薄封装 `api`，部分注册场景在 `register_service` 中直接组合多次 `HttpClient` 请求。  
-- **api**：描述「单个接口怎么调」；从 YAML 取 URL、`casedata` 下标对应的 `reqParam`，调用 `HttpClient.post/get`，解析 `response.json()` 等业务字段。  
+- **service**：描述「业务上怎么调」；薄封装 `api`。  
+- **api**：描述「单个接口怎么调」；**URL** 从对应业务的 `endpoints.yaml` 读取，请求体由用例传入；调用 `HttpClient.post/get`。  
 - **core.request_util**：`HttpClient` 基于 `requests.Session` 封装，统一超时（来自 `get_settings()`）。  
 - **core.assert_util**：如 `assert_equal`，集中断言便于扩展与报告信息统一。  
 - **core.cache_util**：会话级 Token 缓存，供需要 `Authorization` 的 api 使用。  
@@ -82,7 +82,7 @@ api_auto_framework/
 ### 数据流（简图）
 
 ```
-YAML(data/*.yaml) ──► api._data() / 用例侧 fixture 读取
+YAML(endpoints.yaml + cases.yaml) ──► api 读 endpoints / 用例参数化读 cases
                               │
 testcase ──► service ──► api ──► HttpClient ──► 服务端
                               │
@@ -100,7 +100,8 @@ testcase ──► service ──► api ──► HttpClient ──► 服务�
 | `run.py` | 调用 `pytest.main`，指定 `--alluredir`、`--junitxml`；成功后尝试 `allure generate`；若 `config` 中邮件信息完整可发送报告附件 |
 | `pytest.ini` | `testpaths=testcase`，默认 `-v --tb=short`，以及 `--alluredir=report/allure-results` |
 | `conftest.py` | `api_session`、`http_client`；各业务 YAML 的 `load_yaml` fixture（带 Allure「读取 xxx.yaml」步骤）；各 `*Service` 的 fixture |
-| `common/data_files.py` | 声明 `REGISTER_LOGIN_YAML`、`USER_MINE_YAML`、`EARPHONE_YAML`、`MESSAGE_CENTER_YAML` 等绝对路径 |
+| `common/data_files.py` | 声明各业务 `*_ENDPOINTS_YAML`、`*_CASES_YAML` 绝对路径 |
+| `common/case_data.py` | `load_endpoints` / `load_cases_list` / `build_parametrize_cases`（解析单字典用例） |
 | `report/` | 运行后生成；`allure-results` 为原始结果，`allure-report` 为 `allure generate` 后的 HTML，`junit.xml` 由 `run.py` 写入 |
 | `common/json_util.py` | 若仍有 JSON 读写需求可复用；当前主数据已为 YAML |
 
@@ -109,23 +110,22 @@ testcase ──► service ──► api ──► HttpClient ──► 服务�
 ## 如何编写测试用例
 
 1. **准备数据**  
-   在 `data/` 下编辑或新增 YAML，并在 `common/data_files.py` 中增加路径常量（若为新文件）。
+   在 `data/<业务>/` 下维护 **`endpoints.yaml`**（仅 URL 键值）与 **`cases.yaml`**（顶层 `cases:`，列表中**每一项是一条完整用例，一个字典**）。新目录需在 `common/data_files.py` 增加路径常量。
 
 2. **有全新接口时**  
-   - 在 `api/` 新增类或方法：内部 `load_yaml` + 按现有结构取 `casedata[i][2]["reqParam"]`（或与产品约定的新结构）。  
-   - 使用 `self._http.post(...)` / `get(...)`，`self._http` 类型为 `HttpClient`。  
-   - 在 `service/` 增加薄封装类或方法，供用例只依赖 service。
+   - 在 `endpoints.yaml` 增加 URL 键；在 `cases.yaml` 的 `cases` 里追加字典：`caseNo`、`caseName`、`endpoint`（引用 endpoints 中的键）、`request`、`expect`，可选 `repeat_count`。  
+   - 在 `api/` 中从对应 `endpoints.yaml` 取 URL，使用 `HttpClient` 发请求。  
+   - 在 `service/` 增加薄封装。  
+   - 用例侧可用 `common.case_data.build_parametrize_cases` 做 `pytest_generate_tests` 参数化。
 
 3. **编写 `testcase/test_xxx.py`**  
-   - 文件命名符合 `test_*.py`，函数名 `test_*`。  
-   - 需要读数据时，在参数中声明对应 fixture，例如 `register_login_data`、`earphone_data`、`user_mine_data`、`message_center_data`。  
-   - 调用业务时注入 `login_service`、`user_service`、`earphone_service`、`message_service` 等。  
-   - 使用 `allure.step` 区分「读数据 / 调 service / 断言」等步骤。  
-   - 断言优先使用 `from core.assert_util import assert_equal`。  
-   - 注册类场景可继续直接调用 `service.register_service` 中的函数，并在用例中增加 `register_login_data` 以满足「用例层关联 YAML」的展示需求。
+   - 使用 fixture：`register_login_data`、`earphone_data` 等，结构为 `{"endpoints": {...}, "cases": [...]}`。  
+   - 注入 `login_service`、`user_service` 等；断言可用 `core.expect_util.apply_response_expectations`。
 
-4. **YAML 结构约定（与现有用例一致时）**  
-   顶层包含各接口 URL 等键；`casedata` 为列表的列表，元素为含 `caseNo`、`caseName`、`reqParam` 的字典。**api 中通过下标取 case**，改数据或增删 case 时需同步修改代码中的索引或改为按 `caseNo` 查找（需自行实现）。
+4. **单条用例字典字段说明**  
+   - `endpoint`：字符串，必须在同业务的 `endpoints.yaml` 中存在。  
+   - `request`：请求体（原 `reqParam` 合并进此字段，避免嵌套列表套字典的反模式）。  
+   - `expect`：`http_status`、`tip`、`code`、`json_equals`、`list_switch_status` 等与 `expect_util` 一致。
 
 ---
 

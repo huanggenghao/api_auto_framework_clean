@@ -1,0 +1,61 @@
+cases:
+  - caseNo: "01"
+    caseName: 设备推送全部已读
+    endpoint: message_all_read
+    request:
+      type: 3
+      merchantId: 100000000000000000
+      lang: zh_CN
+    expect:
+      http_status: 200
+      tip: "Success！"
+  - caseNo: "02"
+    caseName: 设备分享全部已读
+    endpoint: message_all_read
+    request:
+      type: 4
+      merchantId: 100000000000000000
+      lang: zh_CN
+    expect:
+      http_status: 200
+      tip: "Success！"
+  - caseNo: "03"
+    caseName: 系统通知全部已读
+    endpoint: message_all_read
+    request:
+      type: 1
+      merchantId: 100000000000000000
+      lang: zh_CN
+    expect:
+      http_status: 200
+      tip: "Success！"
+  - caseNo: "04"
+    caseName: 设备推送全部已读
+    endpoint: message_all_read
+    request:
+      type: 3
+      merchantId: 100000000000000000
+      lang: en_US
+    expect:
+      http_status: 200
+      tip: "Success！"
+  - caseNo: "05"
+    caseName: 设备分享全部已读
+    endpoint: message_all_read
+    request:
+      type: 4
+      merchantId: 100000000000000000
+      lang: en_US
+    expect:
+      http_status: 200
+      tip: "Success！"
+  - caseNo: "06"
+    caseName: 系统通知全部已读
+    endpoint: message_all_read
+    request:
+      type: 1
+      merchantId: 100000000000000000
+      lang: en_US
+    expect:
+      http_status: 200
+      tip: "Success！"

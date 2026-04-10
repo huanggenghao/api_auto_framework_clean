@@ -1,6 +1,12 @@
 http:
   timeout: 30
   verify_ssl: false
+  base_url: ""
+  default_headers: {}
+  retry:
+    total: 3
+    backoff_seconds: 0.5
+    retry_status_codes: [502, 503, 504]
 
 auth:
   login_url: "https://dpt-cn-dev.ugreeniot.com/app/user/login"

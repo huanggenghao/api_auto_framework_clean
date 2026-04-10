@@ -7,7 +7,7 @@ import pytest
 import requests
 from unittest.mock import patch
 
-from common.data_files import REGISTER_LOGIN_YAML
+from common.data_files import AUTH_ENDPOINTS_YAML
 from common.yaml_util import load_yaml
 
 
@@ -22,7 +22,7 @@ def registration_ctx():
 
 
 def _login_data():
-    return load_yaml(REGISTER_LOGIN_YAML)
+    return load_yaml(AUTH_ENDPOINTS_YAML)
 
 
 def _perform_user_flow(ctx, operation_type, mock_post):

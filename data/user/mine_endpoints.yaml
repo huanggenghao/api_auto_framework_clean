@@ -1,0 +1,5 @@
+# 个人中心相关接口地址
+user_update_url: https://dpt-cn-dev.ugreeniot.com/app/user/update
+push_switch_list: https://dpt-cn-dev.ugreeniot.com/msg/push/switch/list
+push_switch_update: https://dpt-cn-dev.ugreeniot.com/msg/push/switch/update
+check_version_update: https://dpt-cn-dev.ugreeniot.com/app/v3/application/app/check

@@ -1,13 +1,13 @@
 # -*- coding: utf-8 -*-
+import requests
+
 from api.user_api import UserApi
 from core.request_util import HttpClient
 
 
 class UserService:
-    """个人中心场景：委托 UserApi，便于 testcase 只依赖 service 层。"""
-
     def __init__(self, http: HttpClient):
         self._api = UserApi(http)
 
-    def __getattr__(self, name):
-        return getattr(self._api, name)
+    def post_by_endpoint(self, endpoint_key: str, body: dict) -> requests.Response:
+        return self._api.post_by_endpoint(endpoint_key, body)

@@ -1,0 +1,72 @@
+# 每条为一组完整用例：单字典 + endpoint 引用 endpoints.yaml 中的键
+cases:
+  - caseNo: "01"
+    caseName: 获取h5耳机说明书
+    endpoint: product_manual
+    request:
+      merchantId: 100000000000000000
+      productId: 925994607524962304
+      lang: zh_CN
+    expect:
+      http_status: 200
+      tip: "Success！"
+  - caseNo: "02"
+    caseName: 获取t3 pro耳机说明书
+    endpoint: product_manual
+    request:
+      merchantId: 100000000000000000
+      productId: 927442686274351104
+      lang: zh_CN
+    expect:
+      http_status: 200
+      tip: "Success！"
+  - caseNo: "03"
+    caseName: 获取h6 pro耳机说明书
+    endpoint: product_manual
+    request:
+      merchantId: 100000000000000000
+      productId: 927443095978160128
+      lang: zh_CN
+    expect:
+      http_status: 200
+      tip: "Success！"
+  - caseNo: "04"
+    caseName: 获取p3耳机说明书
+    endpoint: product_manual
+    request:
+      merchantId: 100000000000000000
+      productId: 934671368550416384
+      lang: zh_CN
+    expect:
+      http_status: 200
+      tip: "Success！"
+  - caseNo: "05"
+    caseName: 获取mac 5c耳机说明书
+    endpoint: product_manual
+    request:
+      merchantId: 100000000000000000
+      productId: 925997015143538688
+      lang: zh_CN
+    expect:
+      http_status: 200
+      tip: "Success！"
+  - caseNo: "06"
+    caseName: 获取mac 5耳机说明书
+    endpoint: product_manual
+    request:
+      merchantId: 100000000000000000
+      productId: 925995115073495040
+      lang: zh_CN
+    expect:
+      http_status: 200
+      tip: "Success！"
+  - caseNo: "07"
+    caseName: 获取t6 耳机说明书
+    endpoint: product_manual
+    request:
+      merchantId: 100000000000000000
+      productId: 925994896852246528
+      lang: zh_CN
+    expect:
+      http_status: 200
+      tip: "Success！"

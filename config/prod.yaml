@@ -1,6 +1,12 @@
 http:
   timeout: 30
   verify_ssl: true
+  base_url: ""
+  default_headers: {}
+  retry:
+    total: 2
+    backoff_seconds: 0.5
+    retry_status_codes: [502, 503, 504]
 
 auth:
   login_url: "https://api.example.com/app/user/login"

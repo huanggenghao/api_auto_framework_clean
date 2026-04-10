@@ -1,0 +1,11 @@
+# 登录 / 注册 / 验证码等接口地址（与用例数据分离）
+login_url: https://dpt-cn-dev.ugreeniot.com/app/user/login
+jp_login: https://api-jp.ugreeniot.com/app/user/login
+jp_register: https://api-jp.ugreeniot.com/app/user/register
+register_url: https://dpt-cn-dev.ugreeniot.com/app/user/register
+login_code: https://dpt-cn-dev.ugreeniot.com/app/user/login/code
+code_url: https://dpt-cn-dev.ugreeniot.com/app/code/get
+reset_password: https://dpt-cn-dev.ugreeniot.com/app/reset/password
+user_logoff: https://dpt-cn-dev.ugreeniot.com/app/user/logoff
+Jp_code_get: https://api-jp.ugreeniot.com/app/code/get
+exchange_country_list: https://api-eu.ugreeniot.com/app/country/list
