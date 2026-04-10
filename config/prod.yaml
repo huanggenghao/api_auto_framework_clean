@@ -1,0 +1,17 @@
+http:
+  timeout: 30
+  verify_ssl: true
+
+auth:
+  login_url: "https://api.example.com/app/user/login"
+  login_account: ""
+  login_password: ""
+  merchant_id: ""
+  phone_code: "86"
+
+email:
+  smtp_server: ""
+  port: 465
+  sender: ""
+  psw: ""
+  receiver: ""

@@ -1,0 +1,17 @@
+http:
+  timeout: 30
+  verify_ssl: false
+
+auth:
+  login_url: "https://dpt-cn-dev.ugreeniot.com/app/user/login"
+  login_account: "15992213991"
+  login_password: "abcd1234"
+  merchant_id: "100000000000000000"
+  phone_code: "86"
+
+email:
+  smtp_server: "smtp.163.com"
+  port: 465
+  sender: ""
+  psw: ""
+  receiver: ""

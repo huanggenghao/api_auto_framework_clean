@@ -1,0 +1,6 @@
+# 登录注册场景说明
+# 主用例数据文件：register_login.json（与历史工程兼容）
+# 环境相关 URL / 账号建议放在 config/*.yaml 的 auth 段
+
+description: login_register_dataset
+primary_file: register_login.json

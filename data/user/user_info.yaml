@@ -1,0 +1,5 @@
+# 用户/个人中心相关数据说明
+# 接口请求体与 URL 见同目录迁移文件 Mine.json
+
+description: user_center_dataset
+primary_file: Mine.json

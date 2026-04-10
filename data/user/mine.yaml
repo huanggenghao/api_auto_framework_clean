@@ -1,0 +1,124 @@
+user_update_url: https://dpt-cn-dev.ugreeniot.com/app/user/update
+push_switch_list: https://dpt-cn-dev.ugreeniot.com/msg/push/switch/list
+push_switch_update: https://dpt-cn-dev.ugreeniot.com/msg/push/switch/update
+check_version_update: https://dpt-cn-dev.ugreeniot.com/app/v3/application/app/check
+method: POST
+casedata:
+- - caseNo: '01'
+  - caseName: 更新用户昵称
+  - reqParam:
+      name: '13570368266'
+- - caseNo: '02'
+  - caseName: 更新用户昵称为空
+  - reqParam:
+      name: ''
+- - caseNo: '03'
+  - caseName: 更新用户昵称为1
+  - reqParam:
+      name: '1'
+- - caseNo: '04'
+  - caseName: 更新用户昵称超过30个字符
+  - reqParam:
+      name: '11111111111111111111111111111111111'
+- - caseNo: '05'
+  - caseName: 更新用户头像
+  - reqParam:
+      avatar: https://dpttest.ugreeniot.com/image/976726678281510912_avatar.png
+- - caseNo: '06'
+  - caseName: 更新用户头像为空
+  - reqParam:
+      avatar: ''
+- - caseNo: '07'
+  - caseName: 更新用户昵称等于30个字符
+  - reqParam:
+      name: 我生死狙击1111111&^%$#@!*()*^%%$#@g
+- - caseNo: 08
+  - caseName: 检查消息设置默认值
+  - reqParam: {}
+- - caseNo: 09
+  - caseName: 消息设置界面设置设备推送为开
+  - reqParam:
+      switchId: '978451238196674560'
+      switchStatus: '1'
+- - caseNo: '10'
+  - caseName: 消息设置界面设置设备推送为关
+  - reqParam:
+      switchId: '978451238205063168'
+      switchStatus: '0'
+- - caseNo: '11'
+  - caseName: 消息设置界面设置设备推送为关
+  - reqParam:
+      switchId: '978451238209257472'
+      switchStatus: '0'
+- - caseNo: '12'
+  - caseName: 检验app中文下检测安卓app升级
+  - reqParam:
+      versionNum: 7
+      languageCode: zh_CN
+      platform: 1
+- - caseNo: '13'
+  - caseName: 检验app中文下相同versioncode检测安卓app升级
+  - reqParam:
+      versionNum: 17
+      languageCode: zh_CN
+      platform: 1
+- - caseNo: '14'
+  - caseName: 检验app中文下检测安卓app版本异常
+  - reqParam:
+      versionNum: a
+      languageCodo: zh_CN
+      platform: 1
+- - caseNo: '15'
+  - caseName: 检验app英语下下检测安卓app升级
+  - reqParam:
+      versionNum: 7
+      languageCodo: en_US
+      platform: 1
+- - caseNo: '16'
+  - caseName: 检验app中文下相同versioncode检测安卓app升级
+  - reqParam:
+      versionNum: 17
+      languageCode: en_US
+      platform: 1
+- - caseNo: '17'
+  - caseName: 检验app中文下检测安卓app版本异常
+  - reqParam:
+      versionNum: a
+      languageCodo: en_US
+      platform: 1
+- - caseNo: '18'
+  - caseName: 检验app中文下检测ios app升级
+  - reqParam:
+      versionNum: 7
+      languageCode: zh_CN
+      platform: 2
+- - caseNo: '19'
+  - caseName: 检验app中文下相同versioncode检测苹果app升级
+  - reqParam:
+      versionNum: 17
+      languageCode: zh_CN
+      platform: 2
+- - caseNo: '20'
+  - caseName: 检验app中文下检测苹果app版本异常
+  - reqParam:
+      versionNum: a
+      languageCodo: zh_CN
+      platform: 2
+- - caseNo: '21'
+  - caseName: 检验app英语下下检测苹果app升级
+  - reqParam:
+      versionNum: 7
+      languageCodo: en_US
+      platform: 2
+- - caseNo: '22'
+  - caseName: 检验app英文下相同versioncode检测苹果app升级
+  - reqParam:
+      versionNum: 17
+      languageCode: en_US
+      platform: 2
+- - caseNo: '23'
+  - caseName: 检验app英文下检测苹果app版本异常
+  - reqParam:
+      versionNum: a
+      languageCodo: en_US
+      platform: 2
