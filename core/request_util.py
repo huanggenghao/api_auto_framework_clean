@@ -24,6 +24,7 @@ class HttpClient:
     def __init__(
         self,
         session: Optional[requests.Session] = None,
+        #后面的参数必须用“关键字传参”
         *,
         base_url: Optional[str] = None,
         default_headers: Optional[Dict[str, str]] = None,
@@ -52,7 +53,7 @@ class HttpClient:
         self._retry_all_5xx = len(codes) == 0
         self._retry_status_codes = set(int(x) for x in codes) if codes else set()
         self._log = get_http_logger()
-
+    #把传进来的 url 处理成“最终可请求的完整 URL
     def _build_url(self, url: str) -> str:
         url = (url or "").strip()
         if not url:
@@ -61,6 +62,7 @@ class HttpClient:
             return url
         if not self._base_url:
             return url
+        #去掉左边开头的 /
         return urljoin(self._base_url + "/", url.lstrip("/"))
 
     def _merge_headers(self, headers: Optional[Dict[str, Any]]) -> Dict[str, Any]:
@@ -109,6 +111,7 @@ class HttpClient:
         self._log.info("%s %s", method.upper(), final_url)
         self._log.debug(
             "headers=%s kwargs=%s",
+            # 请求头进行脱敏
             mask_headers(prep_headers),
             list(kwargs.keys()),
         )
